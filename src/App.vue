@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import BlogPost from './components/BlogPost.vue';
 import PaginatedPost from './components/PaginatedPost.vue';
@@ -25,16 +25,26 @@ const retrocederPagina = () =>{
   inicio.value = inicio.value - postXPage.value;
   fin.value = fin.value - postXPage.value;
 }
+onMounted(async() =>{
+  loading.value = true;
+  try{
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts')
+    posts.value = await res.json()
 
-fetch('https://jsonplaceholder.typicode.com/posts')
-.then(res => res.json())
-.then(data => posts.value = data )
-.finally(() => {
-  setTimeout(()=>{
-    loading.value = false
-  },2000)
+  } catch(error){
+    console.log(error)
+  } finally{
+    setTimeout(() =>{
+      loading.value = false
+    },2000)
+    
+  }
+  
+    
   
 })
+
+
 
 
 </script>
